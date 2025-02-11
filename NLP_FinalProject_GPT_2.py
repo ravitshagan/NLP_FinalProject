@@ -121,18 +121,16 @@ class DreamDataset(Dataset):
         self.attn_masks = []
         self.labels = []
         
-        for item in data:
-            # Extract dialogue, question, and answer
-            dialogue = ' '.join(item[0])  # Combine all dialogue turns
-            qa_data = item[1][0]  # Get the first (and only) QA pair
-            question = qa_data['question']
-            answer = qa_data['answer']
-            
-            # Format: "Context: {dialogue} Question: {question} Answer: {answer}"
-            text = f"Context: {dialogue} Question: {question} Answer: {answer}"
+        # נניח שהנתונים כוללים רשימות של חלומות ופירושים
+        dreams = data['dream']
+        interpretations = data['interp']
+        
+        for dream, interp in zip(dreams, interpretations):
+            # יצירת טקסט לצורך טוקניזציה
+            text = f"Dream: {dream} Interpretation: {interp}"
             
             encodings = tokenizer(text, truncation=True, max_length=max_length, 
-                                padding='max_length', return_tensors='pt')
+                                  padding='max_length', return_tensors='pt')
             
             self.input_ids.append(encodings['input_ids'].squeeze())
             self.attn_masks.append(encodings['attention_mask'].squeeze())
