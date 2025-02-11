@@ -73,7 +73,7 @@ def prepare_dream_dataset():
 # In[5]:
 
 
-def train_model(train_dataloader, model, optimizer, device, num_epochs=3):
+def train_model(train_dataloader, model, optimizer, device, num_epochs=5):
     model.train()
     for epoch in range(num_epochs):
         total_loss = 0
