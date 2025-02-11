@@ -100,16 +100,18 @@ def train_model(train_dataloader, model, optimizer, device, num_epochs=5):
 # In[6]:
 
 
-def generate_interpretation(dream_text, model, tokenizer, device, max_length=100):
+def generate_interpretation(dream_text, model, tokenizer, device, max_length=50):
     model.eval()
     inputs = tokenizer.encode(dream_text, return_tensors='pt').to(device)
     with torch.no_grad():
         outputs = model.generate(
             inputs,
-            max_length=max_length,
+            max_length=max_length,      
             num_return_sequences=1,
             pad_token_id=tokenizer.eos_token_id,
-            temperature=0.7,
+            temperature=0.5,            
+            top_k=30,               
+            top_p=0.85,              
             do_sample=True
         )
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
