@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import DistilGPT2LMHeadModel, AutoTokenizer
+from transformers import GPT2LMHeadModel, AutoTokenizer
 from torch.optim import AdamW
 from datasets import load_dataset
 from sklearn.model_selection import train_test_split
@@ -242,7 +242,7 @@ def calculate_metrics(predictions, references):
         rouge_scores[metric] /= len(predictions)
 
     # Perplexity
-    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+    tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
     perplexity = evaluate.load("perplexity")
     perplexity_score = perplexity.compute(predictions=predictions, model_id='gpt2')['mean_perplexity']
 
