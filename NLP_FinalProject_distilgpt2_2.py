@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from transformers import DistilGPT2LMHeadModel, AutoTokenizer
 from torch.optim import AdamW
 from datasets import load_dataset
 from sklearn.model_selection import train_test_split
