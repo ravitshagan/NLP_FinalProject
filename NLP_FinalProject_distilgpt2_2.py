@@ -265,9 +265,9 @@ def calculate_metrics(predictions, references):
 
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    tokenizer = DistilGPT2Tokenizer.from_pretrained("distilgpt2")
+    tokenizer = AutoTokenizer.from_pretrained("distilgpt2")
     tokenizer.pad_token = tokenizer.eos_token
-    model = DistilGPT2LMHeadModel.from_pretrained("distilgpt2").to(device)
+    model = GPT2LMHeadModel.from_pretrained("distilgpt2").to(device)
     
     # Prepare datasets
     train_texts, test_texts = prepare_dream_dataset()
