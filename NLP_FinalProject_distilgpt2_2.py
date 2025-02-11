@@ -21,7 +21,7 @@ from bert_score import score
 import ast
 import os
 from tqdm import tqdm
-
+from nltk.translate.bleu_score import SmoothingFunction
 
 # In[2]:
 
@@ -226,7 +226,8 @@ def generate_interpretation(dream_text, model, tokenizer, device, max_length=100
 def calculate_metrics(predictions, references):
     # BLEU Score
     bleu_scorer = nltk.translate.bleu_score
-    bleu_scores = [bleu_scorer.sentence_bleu([nltk.word_tokenize(ref)], nltk.word_tokenize(pred)) for ref, pred in zip(references, predictions)]
+    smooth_fn = SmoothingFunction().method1
+    bleu_scores = [bleu_scorer.sentence_bleu([nltk.word_tokenize(ref)], nltk.word_tokenize(pred), smoothing_function=smooth_fn) for ref, pred in zip(references, predictions)]
     bleu_avg = np.mean(bleu_scores)
 
     # ROUGE Scores
@@ -242,7 +243,7 @@ def calculate_metrics(predictions, references):
         rouge_scores[metric] /= len(predictions)
 
     # Perplexity
-    tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+    tokenizer = AutoTokenizer.from_pretrained('distilgpt2')
     perplexity = evaluate.load("perplexity")
     perplexity_score = perplexity.compute(predictions=predictions, model_id='gpt2')['mean_perplexity']
 
