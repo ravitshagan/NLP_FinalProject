@@ -169,7 +169,7 @@ def load_validation_data(val_dreams_data):
 # In[35]:
 
 
-def train_model(train_dataloader, model, optimizer, device, num_epochs=3):
+def train_model(train_dataloader, model, optimizer, device, num_epochs=5):
     model.train()
     for epoch in range(num_epochs):
         total_loss = 0
@@ -224,33 +224,33 @@ def generate_interpretation(dream_text, model, tokenizer, device, max_length=100
 
 def calculate_metrics(predictions, references):
     # BLEU Score
-    references_tokenized = [[ref.split()] for ref in references]
-    predictions_tokenized = [pred.split() for pred in predictions]
-    bleu_score = corpus_bleu(references_tokenized, predictions_tokenized)
-    
+    bleu_scorer = nltk.translate.bleu_score
+    bleu_scores = [bleu_scorer.sentence_bleu([nltk.word_tokenize(ref)], nltk.word_tokenize(pred)) for ref, pred in zip(references, predictions)]
+    bleu_avg = np.mean(bleu_scores)
+
     # ROUGE Scores
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
     rouge_scores = {metric: 0.0 for metric in ['rouge1', 'rouge2', 'rougeL']}
-    
+
     for pred, ref in zip(predictions, references):
         scores = scorer.score(ref, pred)
         for metric in rouge_scores:
             rouge_scores[metric] += scores[metric].fmeasure
-    
+
     for metric in rouge_scores:
         rouge_scores[metric] /= len(predictions)
-    
+
     # Perplexity
     tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
     perplexity = evaluate.load("perplexity")
     perplexity_score = perplexity.compute(predictions=predictions, model_id='gpt2')['mean_perplexity']
-    
+
     # BERTScore
     P, R, F1 = score(predictions, references, lang='en', verbose=True)
     bert_score = torch.mean(F1).item()
-    
+
     return {
-        'bleu': bleu_score,
+        'Average BLEU Score': bleu_avg,  # שינוי ל-Average BLEU Score
         'rouge1': rouge_scores['rouge1'],
         'rouge2': rouge_scores['rouge2'],
         'rougeL': rouge_scores['rougeL'],
