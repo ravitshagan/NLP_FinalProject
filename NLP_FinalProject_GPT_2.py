@@ -53,6 +53,7 @@ class DreamDataset(Dataset):
         return {
             'input_ids': encodings['input_ids'].squeeze(),
             'attention_mask': encodings['attention_mask'].squeeze()
+            'labels': encodings['input_ids'].squeeze()
         }
 
 
