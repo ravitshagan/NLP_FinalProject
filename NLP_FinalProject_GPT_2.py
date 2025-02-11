@@ -324,13 +324,13 @@ def main():
     
     # Create datasets
     train_dataset = DreamDataset(train_data, tokenizer)
-    val_dataset = DreamDataset(val_dreams_data, tokenizer)
+    #val_dataset = DreamDataset(val_dreams_data, tokenizer)
     test_dataset = DreamDataset(test_data, tokenizer)
     
     # Create dataloaders
     batch_size = 8
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    #val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
     # Initialize optimizer
@@ -338,7 +338,7 @@ def main():
     
     # Train the model
     num_epochs = 5
-    train(model, train_dataloader, val_dataloader, optimizer, num_epochs, device)
+    train(model, train_dataloader, val_dreams_data, optimizer, num_epochs, device)
     
     # Save the model
     model.save_pretrained('dream_interpreter_model')
