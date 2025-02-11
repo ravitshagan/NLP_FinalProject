@@ -314,13 +314,11 @@ def main():
     
     # Create datasets
     train_dataset = DreamDataset(train_data, tokenizer)
-    val_dataset = DreamDataset(val_dreams_data, tokenizer)
     test_dataset = DreamDataset(test_data, tokenizer)
     
     # Create dataloaders
     batch_size = 8
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     test_loader = DataLoader(test_dataset,batch_size=batch_size, shuffle=False)
     
     # Initialize optimizer and scheduler
@@ -334,7 +332,7 @@ def main():
                                               num_training_steps=total_steps)
     
     # Train the model
-    train(model, train_dataloader, val_dataloader, optimizer, scheduler, num_epochs, device)
+    train(model, train_dataloader, val_dreams_data, optimizer, scheduler, num_epochs, device)
     
     # Load best model for testing
     model.load_state_dict(torch.load('best_dream_interpreter.pt'))
